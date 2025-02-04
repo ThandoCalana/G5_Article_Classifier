@@ -4,4 +4,3 @@ pandas
 nltk
 tensorflow
 scikeras
-pickle
