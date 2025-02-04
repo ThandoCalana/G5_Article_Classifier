@@ -5,3 +5,4 @@ nltk
 nltk_tab
 tensorflow
 scikeras
+pickle
