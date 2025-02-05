@@ -46,7 +46,7 @@ if st.button("Predict Category"):
         # weighted_input = final_vectorized_text * sample_weights  # Zero out padded areas
 
         # Predict using the model
-        prediction = model.predict(weighted_input)
+        prediction = model.predict(final_vectorized_text)
         st.write(f"Predicted Category: {prediction}")
 
         # Get the index of the category with the highest probability
