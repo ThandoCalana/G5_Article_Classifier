@@ -47,7 +47,7 @@ if st.button("Predict Category"):
 
         # Predict using the model
         prediction = model.predict(weighted_input)
-        # st.write(f"Predicted Category: {prediction}")
+        st.write(f"Predicted Category: {prediction}")
 
         # Get the index of the category with the highest probability
         predicted_category_index = np.argmax(prediction, axis=1)[0]
