@@ -13,9 +13,6 @@ with open("NN_model.pkl", "rb") as f:
 with open("tfidf_vectorizer.pkl", "rb") as f:
     vectorizer = pickle.load(f)  # Ensure the vectorizer is fitted before saving
 
-# Verify the vectorizer's feature size
-expected_shape = len(vectorizer.get_feature_names_out())  # Ensure this matches the training feature size
-
 st.title("News Article Category Predictor")
 st.write("Enter a news article, and the model will predict its category.")
 
@@ -33,16 +30,14 @@ if st.button("Predict Category"):
         # Convert the vectorized text to a dense array
         final_vectorized_text = vectorized_text.toarray().astype(np.float32)
 
-        # Ensure that the final vectorized text has the exact shape expected by the model
+        # Pad the vectorized input to match the expected shape
+        expected_shape = 4999  # Shape expected by the model
         current_shape = final_vectorized_text.shape[1]  # Current input size
-
+        
         if current_shape < expected_shape:
             # Pad with zeros to match the expected shape
             padding_length = expected_shape - current_shape
             final_vectorized_text = np.pad(final_vectorized_text, ((0, 0), (0, padding_length)), mode='constant')
-        elif current_shape > expected_shape:
-            # Trim the excess features to match the expected shape
-            final_vectorized_text = final_vectorized_text[:, :expected_shape]
 
         # Apply sample weighting (1 for real text, 0 for padding)
         sample_weights = (final_vectorized_text != 0).astype(np.float32)
@@ -52,6 +47,7 @@ if st.button("Predict Category"):
 
         # Predict using the model
         prediction = model.predict(weighted_input)
+        # st.write(f"Predicted Category: {prediction}")
 
         # Get the index of the category with the highest probability
         predicted_category_index = np.argmax(prediction, axis=1)[0]
@@ -65,3 +61,4 @@ if st.button("Predict Category"):
         
     else:
         st.warning("Please enter some text before predicting.")
+
