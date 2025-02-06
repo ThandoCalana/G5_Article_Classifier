@@ -13,6 +13,9 @@ with open("NN_model.pkl", "rb") as f:
 with open("tfidf_vectorizer.pkl", "rb") as f:
     vectorizer = pickle.load(f)  # Ensure the vectorizer is fitted before saving
 
+# Verify the vectorizer's feature size
+expected_shape = len(vectorizer.get_feature_names_out())  # Ensure this matches the training feature size
+
 st.title("News Article Category Predictor")
 st.write("Enter a news article, and the model will predict its category.")
 
@@ -31,7 +34,6 @@ if st.button("Predict Category"):
         final_vectorized_text = vectorized_text.toarray().astype(np.float32)
 
         # Ensure that the final vectorized text has the exact shape expected by the model
-        expected_shape = 4999  # Shape expected by the model
         current_shape = final_vectorized_text.shape[1]  # Current input size
 
         if current_shape < expected_shape:
@@ -49,7 +51,7 @@ if st.button("Predict Category"):
         weighted_input = final_vectorized_text * sample_weights  # Zero out padded areas
 
         # Predict using the model
-        prediction = model.predict(weighted_input)  # Use the weighted input for prediction
+        prediction = model.predict(weighted_input)
 
         # Get the index of the category with the highest probability
         predicted_category_index = np.argmax(prediction, axis=1)[0]
