@@ -7,7 +7,7 @@ from Preprocessing import preprocess_text
 nltk.download('punkt_tab')
 
 # Load the trained neural network model and the fitted vectorizer
-with open("best_knn_model.pkl", "rb") as f:
+with open("NN_model.pkl", "rb") as f:
     model = pickle.load(f)
 
 with open("tfidf_vectorizer.pkl", "rb") as f:
@@ -30,20 +30,26 @@ if st.button("Predict Category"):
         # Convert the vectorized text to a dense array
         final_vectorized_text = vectorized_text.toarray().astype(np.float32)
 
-        # # Pad the vectorized input to match the expected shape
-        # expected_shape = 58065  # Shape expected by the model
-        # current_shape = final_vectorized_text.shape[1]  # Current input size
-        
-        # if current_shape < expected_shape:
-        #     # Pad with zeros to match the expected shape
-        #     padding_length = expected_shape - current_shape
-        #     final_vectorized_text = np.pad(final_vectorized_text, ((0, 0), (0, padding_length)), mode='constant')
+        # Ensure that the final vectorized text has the exact shape expected by the model
+        expected_shape = 4999  # Shape expected by the model
+        current_shape = final_vectorized_text.shape[1]  # Current input size
 
-        # # Apply sample weighting (1 for real text, 0 for padding)
-        # sample_weights = (final_vectorized_text != 0).astype(np.float32)
+        if current_shape < expected_shape:
+            # Pad with zeros to match the expected shape
+            padding_length = expected_shape - current_shape
+            final_vectorized_text = np.pad(final_vectorized_text, ((0, 0), (0, padding_length)), mode='constant')
+        elif current_shape > expected_shape:
+            # Trim the excess features to match the expected shape
+            final_vectorized_text = final_vectorized_text[:, :expected_shape]
 
-        # # Adjust the input by applying the sample weights
-        # weighted_input = final_vectorized_text * sample_weights  # Zero out padded areas
+        # Apply sample weighting (1 for real text, 0 for padding)
+        sample_weights = (final_vectorized_text != 0).astype(np.float32)
+
+        # Adjust the input by applying the sample weights
+        weighted_input = final_vectorized_text * sample_weights  # Zero out padded areas
+
+        # Predict using the model
+        prediction = model.predict(weighted_input)
 
         # Predict using the model
         prediction = model.predict(final_vectorized_text)
