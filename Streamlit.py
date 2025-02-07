@@ -30,8 +30,8 @@ if st.button("Predict Category"):
         # Convert the vectorized text to a dense array
         final_vectorized_text = vectorized_text.toarray().astype(np.float32)
 
-        # Ensure that the final vectorized text has the exact shape expected by the model
-        expected_shape = 4999  # Shape expected by the model
+      # Ensure that the final vectorized text has the exact shape expected by the model
+        expected_shape = 58062  # Shape expected by the model
         current_shape = final_vectorized_text.shape[1]  # Current input size
 
         if current_shape < expected_shape:
@@ -51,15 +51,11 @@ if st.button("Predict Category"):
         # Predict using the model
         prediction = model.predict(weighted_input)
 
-        # Predict using the model
-        prediction = model.predict(final_vectorized_text)
-        st.write(f"Predicted Category: {prediction}")
-
         # Get the index of the category with the highest probability
         predicted_category_index = np.argmax(prediction, axis=1)[0]
 
         # Map the index to the category label
-        category_labels = ['Education', 'Tech', 'Sports', 'Entertainment', 'Business']
+        category_labels = ['Education', 'Business', 'Sports', 'Entertainment', 'Tech']
         predicted_category = category_labels[predicted_category_index]
 
         # Display the predicted category
