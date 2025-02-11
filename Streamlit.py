@@ -7,7 +7,7 @@ from Preprocessing import preprocess_text
 nltk.download('punkt_tab')
 
 # Load the trained neural network model and the fitted vectorizer
-with open("NN_model.pkl", "rb") as f:
+with open("Neural_Network.pkl", "rb") as f:
     model = pickle.load(f)
 
 with open("tfidf_vectorizer.pkl", "rb") as f:
