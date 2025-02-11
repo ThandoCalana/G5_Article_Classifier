@@ -31,7 +31,7 @@ if st.button("Predict Category"):
         final_vectorized_text = vectorized_text.toarray().astype(np.float32)
 
       # Ensure that the final vectorized text has the exact shape expected by the model
-        expected_shape = vectorizer.vocabulary_.__len__()  # Shape expected by the model
+        expected_shape = 58065  # Shape expected by the model
         current_shape = final_vectorized_text.shape[1]  # Current input size
 
         if current_shape < expected_shape:
